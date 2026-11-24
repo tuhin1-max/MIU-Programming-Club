@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MIU Programming Club</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="logo.png" alt="Logo" width="50">
+                <h3>MIU Club</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active" onclick="switchTab('overview')">🏠 Dashboard</li>
+                <li onclick="switchTab('members')">👥 Members</li>
+                <li onclick="switchTab('teams')">🧑‍🤝‍🧑 Teams</li>
+                <li onclick="switchTab('team-members')">🔗 Team Members</li>
+                <li onclick="switchTab('events')">📅 Events</li>
+                <li onclick="switchTab('registrations')">📋 Event Registrations</li>
+                <li onclick="switchTab('accounts')">💰 Accounts</li>
+                <li onclick="switchTab('instruments')">🎒 Instruments</li>
+            </ul>
+            
+            <div class="sidebar-footer" style="text-align: center;">
+                <button onclick="logout()" class="btn btn-danger btn-full" style="margin-bottom: 15px;">🚪 Logout</button>
+                
+                <div style="font-size: 22px; margin-top: 10px;">
+                    <a href="https://www.facebook.com/miuprogrammingclub" target="_blank" style="color: #bdc3c7; margin: 0 10px; transition: 0.3s;" onmouseover="this.style.color='#3b5998'" onmouseout="this.style.color='#bdc3c7'"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.linkedin.com/company/miu-programming-club/posts/" target="_blank" style="color: #bdc3c7; margin: 0 10px; transition: 0.3s;" onmouseover="this.style.color='#0077b5'" onmouseout="this.style.color='#bdc3c7'"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.youtube.com/@tuhinahammed-7" target="_blank" style="color: #bdc3c7; margin: 0 10px; transition: 0.3s;" onmouseover="this.style.color='#ff0000'" onmouseout="this.style.color='#bdc3c7'"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="topbar">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <h3 class="welcome-text">Welcome to Admin Dashboard</h3>
+                <a href="index.html" class="view-site">View Site</a>
+            </div>
+
+            <div class="content-area">
+                
+                <!-- Overview Section -->
+                <div id="overview" class="section active animate-fade">
+                    <h2 class="section-title">Dashboard Overview</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card"><h3>Total Members</h3><p id="stat-members">--</p></div>
+                        <div class="stat-card"><h3>Total Teams</h3><p id="stat-teams">--</p></div>
+                        <div class="stat-card"><h3>Total Events</h3><p id="stat-events">--</p></div>
+                        <div class="stat-card"><h3>Total Income</h3><p id="stat-income" class="text-success">--</p></div>
+                        <div class="stat-card"><h3>Total Expense</h3><p id="stat-expense" class="text-danger">--</p></div>
+                        <div class="stat-card"><h3>Net Balance</h3><p id="stat-balance" class="text-primary">--</p></div>
+                    </div>
+                </div>
+
+                <!-- Members Section -->
+                <div id="members" class="section animate-fade">
+                    <h2 class="section-title">Manage Members</h2>
+                    <div class="card">
+                        <h3>Add New Member</h3>
+                        <form id="addMemberForm" onsubmit="addMember(event)">
+                            <div class="input-row">
+                                <input type="text" id="dashboard_student_id" placeholder="Student ID" required>
+                                <input type="text" id="dashboard_cf_handle" placeholder="Codeforces Handle">
+                            </div>
+                            <div class="input-row">
+                                <input type="text" id="dashboard_first_name" placeholder="First Name" required>
+                                <input type="text" id="dashboard_last_name" placeholder="Last Name" required>
+                            </div>
+                            <div class="input-row">
+                                <input type="email" id="dashboard_email" placeholder="Email" required>
+                                <input type="text" id="dashboard_mentor_id" placeholder="Mentor ID (Optional)">
+                            </div>
+                            <div class="input-row">
+                                <select id="dashboard_role" onchange="toggleDashDesignation()">
+                                    <option value="Member">Member</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                                <input type="text" id="dashboard_designation" placeholder="Designation" style="display: none;">
+                            </div>
+                            <button type="submit" class="btn btn-success">Add Member</button>
+                        </form>
+                    </div>
+                    <div class="table-container" id="members-container">Loading...</div>
+                </div>
+
+                <!-- Teams Section -->
+                <div id="teams" class="section animate-fade">
+                    <h2 class="section-title">Manage Teams</h2>
+                    <div class="card">
+                        <h3>Create New Team</h3>
+                        <form id="addTeamForm" onsubmit="addTeam(event)">
+                            <input type="text" id="team_name" placeholder="Team Name (e.g. Logic_Breakers)" required>
+                            <button type="submit" class="btn btn-purple">Create Team</button>
+                        </form>
+                    </div>
+                    <div class="table-container" id="teams-container">Loading...</div>
+                </div>
+
+                <!-- Team Members Section -->
+                <div id="team-members" class="section animate-fade">
+                    <h2 class="section-title">Assign Members to Teams</h2>
+                    <div class="card">
+                        <h3>Assign Member</h3>
+                        <form id="assignTeamForm" onsubmit="assignTeamMember(event)">
+                            <div class="input-row">
+                                <input type="text" id="assign_student_id" placeholder="Student ID" required>
+                                <input type="number" id="assign_team_id" placeholder="Team ID" required>
+                            </div>
+                            <button type="submit" class="btn btn-dark">Assign to Team</button>
+                        </form>
+                    </div>
+                    <div class="table-container" id="team-members-container">Loading...</div>
+                </div>
+
+                <!-- Events Section -->
+                <div id="events" class="section animate-fade">
+                    <h2 class="section-title">Manage Events</h2>
+                    <div class="card">
+                        <h3>Create New Event</h3>
+                        <form id="addEventForm" onsubmit="addEvent(event)">
+                            <input type="text" id="event_title" placeholder="Event Title" required>
+                            <div class="input-row">
+                                <input type="date" id="event_date" required>
+                                <input type="text" id="event_location" placeholder="Location" required>
+                            </div>
+                            <input type="text" id="event_desc" placeholder="Short Description">
+                            <button type="submit" class="btn btn-orange">Create Event</button>
+                        </form>
+                    </div>
+                    <div class="table-container" id="events-container">Loading...</div>
+                </div>
+
+                <!-- Event Registrations Section -->
+                <div id="registrations" class="section animate-fade">
+                    <h2 class="section-title">Event Registrations</h2>
+                    <div class="card">
+                        <h3>Register Team for Event</h3>
+                        <form id="registerEventForm" onsubmit="registerTeamEvent(event)">
+                            <div class="input-row">
+                                <input type="number" id="reg_team_id" placeholder="Team ID" required>
+                                <input type="number" id="reg_event_id" placeholder="Event ID" required>
+                            </div>
+                            <input type="date" id="reg_date" required>
+                            <button type="submit" class="btn btn-danger">Register for Event</button>
+                        </form>
+                    </div>
+                    <div class="table-container" id="registrations-container">Loading...</div>
+                </div>
+
+                <!-- Accounts Section -->
+                <div id="accounts" class="section animate-fade">
+                    <h2 class="section-title">Manage Accounts</h2>
+                    <div class="card">
+                        <h3>Add Record</h3>
+                        <form id="addAccountForm" onsubmit="addAccount(event)">
+                            <div class="input-row">
+                                <select id="acc_type" required>
+                                    <option value="Income">Income (+)</option>
+                                    <option value="Expense">Expense (-)</option>
+                                </select>
+                                <input type="number" id="acc_amount" placeholder="Amount (৳)" required>
+                            </div>
+                            <input type="text" id="acc_purpose" placeholder="Purpose (e.g. Snacks)" required>
+                            <div class="input-row">
+                                <input type="date" id="acc_date" required>
+                                <input type="text" id="acc_handled_by" placeholder="Handled By (Student ID)" required>
+                            </div>
+                            <button type="submit" class="btn btn-dark">Save Record</button>
+                        </form>
+                    </div>
+                    <div class="table-container" id="accounts-container">Loading...</div>
+                </div>
+
+                <!-- Instruments Section -->
+                <div id="instruments" class="section animate-fade">
+                    <h2 class="section-title">Manage Instruments</h2>
+                    <div class="card">
+                        <h3>Add Instrument</h3>
+                        <form id="addInstrumentForm" onsubmit="addInstrument(event)">
+                            <input type="text" id="inst_name" placeholder="Instrument Name" required>
+                            <div class="input-row">
+                                <input type="number" id="inst_quantity" placeholder="Quantity" value="1" required>
+                                <select id="inst_condition">
+                                    <option value="Good">Good</option>
+                                    <option value="Damaged">Damaged</option>
+                                    <option value="Lost">Lost</option>
+                                </select>
+                            </div>
+                            <input type="text" id="inst_maintained_by" placeholder="Maintained By (Student ID)">
+                            <button type="submit" class="btn btn-orange">Add Instrument</button>
+                        </form>
+                    </div>
+                    <div class="table-container" id="instruments-container">Loading...</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - MIU Programming Club</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- আইকনের জন্য FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-body">
+    <div class="center-form-container">
+        <div class="auth-card animate-fade">
+            <img src="logo.png" alt="Logo" class="auth-logo">
+            <h2>Join the Club</h2>
+            <p class="auth-sub">Register as a new member</p>
+
+            <form id="registerForm" onsubmit="registerNewMember(event)">
+                <input type="text" id="student_id" placeholder="Student ID" required>
+                <div class="input-group">
+                    <input type="text" id="first_name" placeholder="First Name" required>
+                    <input type="text" id="last_name" placeholder="Last Name" required>
+                </div>
+                <input type="email" id="email" placeholder="Email Address" required>
+                <input type="text" id="cf_handle" placeholder="Codeforces Handle">
+                
+                <select id="role" onchange="toggleDesignation()">
+                    <option value="Member">Member</option>
+                    <option value="Admin">Admin</option>
+                </select>
+                
+                <input type="text" id="designation" placeholder="Designation (e.g. Executive 3)" style="display: none;">
+                <input type="password" id="admin_passkey" placeholder="Admin Passkey (Secret)" style="display: none; margin-top: 8px;">
+                
+                <button type="submit" class="btn btn-success btn-full">Register Account</button>
+            </form>
+            
+            <div class="auth-links">
+                <a href="login.html">Already have an account? Login</a><br>
+                <a href="index.html" class="back-link">← Back to Home</a>
+            </div>
+
+            <!-- সোশ্যাল মিডিয়া লিংক -->
+            <div style="margin-top: 25px; font-size: 22px;">
+                <a href="https://www.facebook.com/miuprogrammingclub" target="_blank" style="color: #3b5998; margin: 0 10px; text-decoration: none;"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.linkedin.com/company/miu-programming-club/posts/" target="_blank" style="color: #0077b5; margin: 0 10px; text-decoration: none;"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@tuhinahammed-7" target="_blank" style="color: #ff0000; margin: 0 10px; text-decoration: none;"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
