@@ -1,6 +1,4 @@
-// Logic for Admin Dashboard
 
-// 1. Auth Check & Role Validation
 document.addEventListener("DOMContentLoaded", () => {
     if (localStorage.getItem('admin_logged_in') !== 'true') {
         window.location.href = 'login.html';
@@ -10,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// 🛡️ Special Member Restriction Logic
 function applyRoleRestrictions() {
     const role = localStorage.getItem('user_role');
     
@@ -32,7 +29,6 @@ function logout() {
     window.location.href = 'login.html';
 }
 
-// 2. UI Navigation
 function switchTab(sectionId) {
     document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
     document.getElementById(sectionId).classList.add('active');
@@ -59,7 +55,6 @@ function toggleDashDesignation() {
     }
 }
 
-// 3. Fetch & Populate Data
 function loadAllData() {
     getMembers(); getTeams(); getTeamMembers(); getEvents(); 
     getEventRegistrations(); getAccounts(); getInstruments();
@@ -67,10 +62,10 @@ function loadAllData() {
 }
 
 function updateOverviewStats() {
-    fetch('http://localhost:8000/members').then(r=>r.json()).then(d => document.getElementById('stat-members').innerText = d.length).catch(e=>console.log(e));
-    fetch('http://localhost:8000/teams').then(r=>r.json()).then(d => document.getElementById('stat-teams').innerText = d.length).catch(e=>console.log(e));
-    fetch('http://localhost:8000/events').then(r=>r.json()).then(d => document.getElementById('stat-events').innerText = d.length).catch(e=>console.log(e));
-    fetch('http://localhost:8000/accounts').then(r=>r.json()).then(data => {
+    fetch('https://miu-club-backend.onrender.com/members').then(r=>r.json()).then(d => document.getElementById('stat-members').innerText = d.length).catch(e=>console.log(e));
+    fetch('https://miu-club-backend.onrender.com/teams').then(r=>r.json()).then(d => document.getElementById('stat-teams').innerText = d.length).catch(e=>console.log(e));
+    fetch('https://miu-club-backend.onrender.com/events').then(r=>r.json()).then(d => document.getElementById('stat-events').innerText = d.length).catch(e=>console.log(e));
+    fetch('https://miu-club-backend.onrender.com/accounts').then(r=>r.json()).then(data => {
         let inc = 0, exp = 0;
         data.forEach(acc => {
             if(acc.transaction_type === 'Income') inc += parseFloat(acc.amount);
@@ -82,12 +77,8 @@ function updateOverviewStats() {
     }).catch(e=>console.log(e));
 }
 
-// =========================================
-// GET Functions (With Admin Delete Buttons & Mentor)
-// =========================================
-
 function getMembers() {
-    fetch('http://localhost:8000/members')
+    fetch('https://miu-club-backend.onrender.com/members')
         .then(res => res.json())
         .then(data => {
             const isAdmin = localStorage.getItem('user_role') === 'Admin';
@@ -103,7 +94,7 @@ function getMembers() {
 }
 
 function getTeams() {
-    fetch('http://localhost:8000/teams')
+    fetch('https://miu-club-backend.onrender.com/teams')
         .then(res => res.json())
         .then(data => {
             const isAdmin = localStorage.getItem('user_role') === 'Admin';
@@ -118,7 +109,7 @@ function getTeams() {
 }
 
 function getTeamMembers() {
-    fetch('http://localhost:8000/team-members')
+    fetch('https://miu-club-backend.onrender.com/team-members')
         .then(res => res.json())
         .then(data => {
             let html = `<table><tr><th>Team ID</th><th>Team Name</th><th>Members (Name & ID)</th></tr>`;
@@ -129,7 +120,7 @@ function getTeamMembers() {
 }
 
 function getEvents() {
-    fetch('http://localhost:8000/events')
+    fetch('https://miu-club-backend.onrender.com/events')
         .then(res => res.json())
         .then(data => {
             const isAdmin = localStorage.getItem('user_role') === 'Admin';
@@ -145,7 +136,7 @@ function getEvents() {
 }
 
 function getEventRegistrations() {
-    fetch('http://localhost:8000/event-registrations')
+    fetch('https://miu-club-backend.onrender.com/event-registrations')
         .then(res => res.json())
         .then(data => {
             const isAdmin = localStorage.getItem('user_role') === 'Admin';
@@ -161,7 +152,7 @@ function getEventRegistrations() {
 }
 
 function getAccounts() {
-    fetch('http://localhost:8000/accounts')
+    fetch('https://miu-club-backend.onrender.com/accounts')
         .then(res => res.json())
         .then(data => {
             const isAdmin = localStorage.getItem('user_role') === 'Admin';
@@ -179,7 +170,7 @@ function getAccounts() {
 }
 
 function getInstruments() {
-    fetch('http://localhost:8000/instruments')
+    fetch('https://miu-club-backend.onrender.com/instruments')
         .then(res => res.json())
         .then(data => {
             const isAdmin = localStorage.getItem('user_role') === 'Admin';
@@ -192,10 +183,6 @@ function getInstruments() {
             document.getElementById('instruments-container').innerHTML = html;
         });
 }
-
-// =========================================
-// 4. POST Form Handlers (Add Data)
-// =========================================
 
 function handlePost(url, data, formId, reloadFunc) {
     const role = localStorage.getItem('user_role');
@@ -233,18 +220,14 @@ function addMember(e) {
         designation: desig,
         mentor_id: document.getElementById('dashboard_mentor_id').value 
     }; 
-    handlePost('http://localhost:8000/add-member', data, 'addMemberForm', getMembers); 
+    handlePost('https://miu-club-backend.onrender.com/add-member', data, 'addMemberForm', getMembers); 
 }
-function addTeam(e) { e.preventDefault(); handlePost('http://localhost:8000/add-team', { team_name: document.getElementById('team_name').value }, 'addTeamForm', getTeams); }
-function assignTeamMember(e) { e.preventDefault(); let data = { student_id: document.getElementById('assign_student_id').value, team_id: document.getElementById('assign_team_id').value }; handlePost('http://localhost:8000/assign-team', data, 'assignTeamForm', getTeamMembers); }
-function addEvent(e) { e.preventDefault(); let data = { title: document.getElementById('event_title').value, description: document.getElementById('event_desc').value, event_date: document.getElementById('event_date').value, location: document.getElementById('event_location').value }; handlePost('http://localhost:8000/add-event', data, 'addEventForm', getEvents); }
-function registerTeamEvent(e) { e.preventDefault(); let data = { team_id: document.getElementById('reg_team_id').value, event_id: document.getElementById('reg_event_id').value, participate_date: document.getElementById('reg_date').value }; handlePost('http://localhost:8000/register-event', data, 'registerEventForm', getEventRegistrations); }
-function addAccount(e) { e.preventDefault(); let data = { transaction_type: document.getElementById('acc_type').value, amount: document.getElementById('acc_amount').value, purpose: document.getElementById('acc_purpose').value, transaction_date: document.getElementById('acc_date').value, handled_by: document.getElementById('acc_handled_by').value }; handlePost('http://localhost:8000/add-account', data, 'addAccountForm', getAccounts); }
-function addInstrument(e) { e.preventDefault(); let data = { name: document.getElementById('inst_name').value, quantity: document.getElementById('inst_quantity').value, condition_status: document.getElementById('inst_condition').value, maintained_by: document.getElementById('inst_maintained_by').value }; handlePost('http://localhost:8000/add-instrument', data, 'addInstrumentForm', getInstruments); }
-
-// =========================================
-// 5. DELETE Form Handlers
-// =========================================
+function addTeam(e) { e.preventDefault(); handlePost('https://miu-club-backend.onrender.com/add-team', { team_name: document.getElementById('team_name').value }, 'addTeamForm', getTeams); }
+function assignTeamMember(e) { e.preventDefault(); let data = { student_id: document.getElementById('assign_student_id').value, team_id: document.getElementById('assign_team_id').value }; handlePost('https://miu-club-backend.onrender.com/assign-team', data, 'assignTeamForm', getTeamMembers); }
+function addEvent(e) { e.preventDefault(); let data = { title: document.getElementById('event_title').value, description: document.getElementById('event_desc').value, event_date: document.getElementById('event_date').value, location: document.getElementById('event_location').value }; handlePost('https://miu-club-backend.onrender.com/add-event', data, 'addEventForm', getEvents); }
+function registerTeamEvent(e) { e.preventDefault(); let data = { team_id: document.getElementById('reg_team_id').value, event_id: document.getElementById('reg_event_id').value, participate_date: document.getElementById('reg_date').value }; handlePost('https://miu-club-backend.onrender.com/register-event', data, 'registerEventForm', getEventRegistrations); }
+function addAccount(e) { e.preventDefault(); let data = { transaction_type: document.getElementById('acc_type').value, amount: document.getElementById('acc_amount').value, purpose: document.getElementById('acc_purpose').value, transaction_date: document.getElementById('acc_date').value, handled_by: document.getElementById('acc_handled_by').value }; handlePost('https://miu-club-backend.onrender.com/add-account', data, 'addAccountForm', getAccounts); }
+function addInstrument(e) { e.preventDefault(); let data = { name: document.getElementById('inst_name').value, quantity: document.getElementById('inst_quantity').value, condition_status: document.getElementById('inst_condition').value, maintained_by: document.getElementById('inst_maintained_by').value }; handlePost('https://miu-club-backend.onrender.com/add-instrument', data, 'addInstrumentForm', getInstruments); }
 
 function deleteRecord(url, reloadFunc) {
     if (!confirm("Are you sure you want to delete this record? This action cannot be undone.")) return;
@@ -259,9 +242,9 @@ function deleteRecord(url, reloadFunc) {
     .catch(err => alert("Error deleting record"));
 }
 
-function deleteMember(id) { deleteRecord(`http://localhost:8000/delete-member/${id}`, getMembers); }
-function deleteTeam(id) { deleteRecord(`http://localhost:8000/delete-team/${id}`, getTeams); }
-function deleteEvent(id) { deleteRecord(`http://localhost:8000/delete-event/${id}`, getEvents); }
-function deleteAccount(id) { deleteRecord(`http://localhost:8000/delete-account/${id}`, getAccounts); }
-function deleteInstrument(id) { deleteRecord(`http://localhost:8000/delete-instrument/${id}`, getInstruments); }
-function deleteEventRegistration(teamId, eventId) { deleteRecord(`http://localhost:8000/delete-event-registration/${teamId}/${eventId}`, getEventRegistrations); }
+function deleteMember(id) { deleteRecord(`https://miu-club-backend.onrender.com/delete-member/${id}`, getMembers); }
+function deleteTeam(id) { deleteRecord(`https://miu-club-backend.onrender.com/delete-team/${id}`, getTeams); }
+function deleteEvent(id) { deleteRecord(`https://miu-club-backend.onrender.com/delete-event/${id}`, getEvents); }
+function deleteAccount(id) { deleteRecord(`https://miu-club-backend.onrender.com/delete-account/${id}`, getAccounts); }
+function deleteInstrument(id) { deleteRecord(`https://miu-club-backend.onrender.com/delete-instrument/${id}`, getInstruments); }
+function deleteEventRegistration(teamId, eventId) { deleteRecord(`https://miu-club-backend.onrender.com/delete-event-registration/${teamId}/${eventId}`, getEventRegistrations); }

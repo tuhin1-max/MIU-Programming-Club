@@ -25,7 +25,6 @@ function registerNewMember(event) {
     let designationValue = document.getElementById('designation').value;
     let passkeyValue = document.getElementById('admin_passkey') ? document.getElementById('admin_passkey').value : ''; 
 
-    // 🔴 তোমার ক্লাবের আসল সিক্রেট পাসকি
     const SECRET_PASSKEY = "MIU-ADMIN-2026"; 
 
     if (roleValue === 'Member') {
@@ -41,7 +40,6 @@ function registerNewMember(event) {
         }
     }
 
-    // ইউজারের দেওয়া Student ID ভ্যারিয়েবলে রাখা হলো
     const studentId = document.getElementById('student_id').value;
 
     const newMember = {
@@ -54,7 +52,7 @@ function registerNewMember(event) {
         designation: designationValue
     };
 
-    fetch('http://localhost:8000/add-member', {
+    fetch('https://miu-club-backend.onrender.com/add-member', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newMember)
@@ -62,13 +60,11 @@ function registerNewMember(event) {
     .then(response => response.text())
     .then(data => {
         alert("Registration Successful! Welcome to the Dashboard. 🎉");
-        
-        // 🚀 অটো-লগিন লজিক (লগিন পেজ স্কিপ করে সরাসরি ড্যাশবোর্ড)
+
         localStorage.setItem('admin_logged_in', 'true');
-        localStorage.setItem('user_role', roleValue); // সে Member নাকি Admin সেটা সেট হয়ে যাবে
+        localStorage.setItem('user_role', roleValue); 
         localStorage.setItem('admin_id', studentId);
         
-        // সরাসরি ড্যাশবোর্ডে রিডাইরেক্ট
         window.location.href = 'dashboard.html';
     })
     .catch(error => {
@@ -84,7 +80,7 @@ function handleLogin(event) {
         email: document.getElementById('login_email').value
     };
 
-    fetch('http://localhost:8000/login', {
+    fetch('https://miu-club-backend.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData)
